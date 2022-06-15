@@ -29,15 +29,16 @@ export default class App extends Component {
   }
 
   addItem = (text) => {
-    const newItem = this.createTodoItem(text);
-    this.setState(({ todoData }) => {
-      const newArray = [newItem, ...todoData];
-      return {
-        todoData: newArray,
-      };
-    });
+    if (text.length > 0 && this.state.filter[0] !== 'done') {
+      const newItem = this.createTodoItem(text);
+      this.setState(({ todoData }) => {
+        const newArray = [newItem, ...todoData];
+        return {
+          todoData: newArray,
+        };
+      });
+    }
   };
-
   deleteItem = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
@@ -61,6 +62,12 @@ export default class App extends Component {
         todoData: this.toggleProperty(todoData, id, 'done'),
       };
     });
+    if (this.state.filter[0] === 'active') {
+      this.showActive();
+    }
+    if (this.state.filter[0] === 'done') {
+      this.showDone();
+    }
   };
 
   deleteCompletedItems = () => {
