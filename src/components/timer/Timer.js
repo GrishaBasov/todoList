@@ -13,9 +13,7 @@ export default class Timer extends Component {
 
   setTime = () => {
     let { min, sec } = this.props;
-    // eslint-disable-next-line no-unused-expressions
     min ? this.setState({ minutes: min }) : null;
-    // eslint-disable-next-line no-unused-expressions
     sec ? this.setState({ seconds: sec }) : null;
   };
 
@@ -47,10 +45,7 @@ export default class Timer extends Component {
 
   render() {
     let { minutes, seconds } = this.state;
-
-    // eslint-disable-next-line no-unused-expressions
     minutes < 10 ? (minutes = '0' + minutes) : null;
-    // eslint-disable-next-line no-unused-expressions
     seconds < 10 ? (seconds = '0' + seconds) : null;
     return (
       <span className="description">
