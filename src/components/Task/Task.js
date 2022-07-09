@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { PureComponent } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
@@ -6,7 +6,7 @@ import Timer from '../timer';
 
 import '../TaskList/TaskList.css';
 
-export default class Task extends Component {
+export default class Task extends PureComponent {
   static defaultProps = {
     description: 'Default content (defaultProps)',
   };
@@ -15,7 +15,7 @@ export default class Task extends Component {
   };
 
   render() {
-    const { id, description, min, sec, created, onDeleted, onToggleDone, done } = this.props;
+    const { id, description, min, sec, created, onDeleted, onToggleDone, done, setTimeFromTimer } = this.props;
 
     let classNames = 'view';
     if (done) {
@@ -28,7 +28,7 @@ export default class Task extends Component {
           <input className="toggle" type="checkbox" onClick={onToggleDone} defaultChecked={done} />
           <label>
             <span className="title">{description}</span>
-            <Timer min={min} sec={sec} />
+            <Timer setTimeFromTimer={setTimeFromTimer} id={id} min={min} sec={sec} />
             <span className="description">{formatDistanceToNow(created)}</span>
           </label>
           <button className="icon icon-edit" />

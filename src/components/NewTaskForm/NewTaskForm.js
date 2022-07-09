@@ -1,68 +1,54 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './NewTaskForm.css';
 
-export default class NewTaskForm extends Component {
-  state = {
-    label: '',
-    min: '',
-    sec: '',
-  };
+const NewTaskForm = ({ onItemAdded }) => {
+  const [label, setLabel] = useState('');
+  const [min, setMin] = useState('');
+  const [sec, setSec] = useState('');
 
-  onHandleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  onSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    this.props.onItemAdded(this.state.label, this.state.min, this.state.sec);
-    this.setState(() => {
-      return {
-        label: '',
-        min: '',
-        sec: '',
-      };
-    });
+    onItemAdded(label, min, sec);
+    setLabel('');
+    setMin('');
+    setSec('');
   };
 
-  render() {
-    return (
-      <header id="todoapp-header" className="header">
-        <h1>todos</h1>
-        <form onSubmit={this.onSubmit} className="new-todo-form">
-          <input
-            name="label"
-            type="text"
-            className="new-todo"
-            placeholder="What needs to be done?"
-            autoFocus
-            onChange={this.onHandleChange}
-            value={this.state.label}
-          />
-          <input
-            name="min"
-            type="text"
-            className="new-todo-form__timer"
-            placeholder="Min"
-            autoFocus
-            onChange={this.onHandleChange}
-            value={this.state.min}
-          />
-          <input
-            name="sec"
-            type="text"
-            className="new-todo-form__timer"
-            placeholder="Sec"
-            autoFocus
-            onChange={this.onHandleChange}
-            value={this.state.sec}
-          />
-          <button type="submit" />
-        </form>
-      </header>
-    );
-  }
-}
+  return (
+    <header id="todoapp-header" className="header">
+      <h1>todos</h1>
+      <form onSubmit={onSubmit} className="new-todo-form">
+        <input
+          name="label"
+          type="text"
+          className="new-todo"
+          placeholder="What needs to be done?"
+          autoFocus
+          onChange={(e) => setLabel(e.target.value)}
+          value={label}
+        />
+        <input
+          name="min"
+          type="text"
+          className="new-todo-form__timer"
+          placeholder="Min"
+          autoFocus
+          onChange={(e) => setMin(e.target.value)}
+          value={min}
+        />
+        <input
+          name="sec"
+          type="text"
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          autoFocus
+          onChange={(e) => setSec(e.target.value)}
+          value={sec}
+        />
+        <button type="submit" />
+      </form>
+    </header>
+  );
+};
+
+export default NewTaskForm;

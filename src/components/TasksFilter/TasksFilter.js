@@ -3,10 +3,6 @@ import { Component } from 'react';
 import './TasksFilter.css';
 
 export default class TasksFilter extends Component {
-  state = {
-    arr: 1,
-  };
-
   render() {
     const { filter, clickOnFilter } = this.props;
     let classNameAll = 'view';

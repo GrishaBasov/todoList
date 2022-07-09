@@ -1,59 +1,69 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default class Timer extends Component {
-  state = {
+const Timer = ({ min, sec, setTimeFromTimer, id }) => {
+  const [time, setTime] = useState({
     minutes: 0,
     seconds: 0,
-    running: false,
-  };
+  });
+  const [timerOn, setTimer] = useState(false);
 
-  componentDidMount() {
-    this.setTime();
-  }
-
-  setTime = () => {
-    let { min, sec } = this.props;
-    min ? this.setState({ minutes: min }) : null;
-    sec ? this.setState({ seconds: sec }) : null;
-  };
-
-  setTimer = () => {
-    const interval = setInterval(() => {
-      if (this.state.running) {
-        if (this.state.seconds !== 0) {
-          this.setState({ seconds: this.state.seconds - 1 });
-        }
-        if (this.state.seconds === 0 && this.state.minutes > 0) {
-          this.setState({
-            seconds: 59,
-            minutes: this.state.minutes - 1,
-          });
-        }
+  useEffect(() => {
+    setTime(() => {
+      if (min === '') {
+        min = 0;
       }
-      if (!this.state.running) {
-        clearInterval(interval);
+      if (sec === '') {
+        sec = 0;
       }
-    }, 1000);
-  };
-
-  changeThisStateRunning = () => {
-    this.setState({
-      running: !this.state.running,
+      return {
+        minutes: min,
+        seconds: sec,
+      };
     });
-    this.setTimer();
-  };
+  }, []);
 
-  render() {
-    let { minutes, seconds } = this.state;
-    minutes < 10 ? (minutes = '0' + minutes) : null;
-    seconds < 10 ? (seconds = '0' + seconds) : null;
-    return (
-      <span className="description">
-        <button onClick={this.changeThisStateRunning} className="icon icon-play" />
-        <button onClick={this.changeThisStateRunning} className="icon icon-pause" />
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        {minutes}:{seconds}
-      </span>
-    );
-  }
-}
+  useEffect(() => {
+    let interval = null;
+    if (timerOn) {
+      interval = setInterval(() => {
+        if (time.seconds > 0) {
+          setTime(() => {
+            return {
+              seconds: time.seconds - 1,
+              minutes: time.minutes,
+            };
+          });
+          setTimeFromTimer(id, time.minutes, time.seconds);
+        }
+        if (time.seconds === 0 && time.minutes > 0) {
+          setTime((time) => {
+            return {
+              seconds: time.seconds + 59,
+              minutes: time.minutes - 1,
+            };
+          });
+          setTimeFromTimer(id, time.minutes, time.seconds);
+        } else {
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerOn, time.minutes, time.seconds]);
+
+  let m = time.minutes;
+  let s = time.seconds;
+
+  m < 10 && (m = '0' + m);
+  s < 10 && (s = '0' + s);
+
+  return (
+    <span className="description">
+      <button onClick={() => setTimer(true)} className="icon icon-play" />
+      <button onClick={() => setTimer(false)} className="icon icon-pause" />
+      &nbsp;&nbsp;&nbsp;&nbsp; {m}:{s}
+    </span>
+  );
+};
+
+export default Timer;
